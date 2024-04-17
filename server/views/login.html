@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&family=Strait&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./home.css">
+
+</head>
+<Style>
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        /* height: 400px; */
+        font-family: "Rubik", sans-serif;
+        font-optical-sizing: auto;
+    }
+
+    #loginForm {
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+    }
+
+    #loginForm input {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    #loginForm button {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #1a314a;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #loginForm button:hover {
+        background-color: #0056b3;
+    }
+</Style>
+
+<body>
+    <nav class="navbar">
+
+
+        <img id="homeLogo" src="./img/spaceapp5.png" alt="Logo">
+        <div class="links">
+            <a href="/">Home</a>
+            <a href="marsPhoto.html">Mars Rover Photos</a>
+
+            <a id="signupBtn" href="signup.html">Sign Up</a>
+            <a id="loginBtn" href="login.html">Log In</a>
+            <a id="likesBtn" style="display: none;" href="likes.html">Your Likes</a>
+            <a id="logoutBtn" style="display: none;" href="#">Log Out</a>
+        </div>
+        <div class="login-info" id="loginText">
+            <!-- Will be filled by JavaScript -->
+        </div>
+        <div class="navbarImages"></div>
+
+    </nav>
+    <main class="content">
+
+        <h1>Login</h1>
+        <form id="loginForm">
+            <label for="email">Email:</label>
+            <input type="text" placeholder="Email" name="email" id="email" required>
+            <label for="password">Password:</label>
+            <input type="password" placeholder="Password" name="password" id="password" required>
+            <button type="submit">Login</button>
+        </form>
+
+    </main>
+
+
+    <script>
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const { email: { value: email }, password: { value: password } } = loginForm;
+
+            // Validate email and password
+            if (!email || !password) {
+                alert('Please enter a valid email and password.');
+                return;
+            }
+
+            try {
+                // Send a POST request to the server for user login
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify({ email, password })
+                });
+
+                switch (response.status) {
+                    case 401:
+                        alert('Incorrect email or password.');
+                        return;
+                    case 500:
+                        alert('Server error. Please try again later.');
+                        return;
+                    default:
+                        if (!response.ok) {
+                            alert('Login request failed.');
+                            return;
+                        }
+                }
+
+                const responseData = await response.json();
+
+                // Validate server response
+                if (!responseData || !responseData.token) {
+                    alert('Invalid server response.');
+                    return;
+                }
+                if (responseData.email) {
+                    localStorage.setItem('email', responseData.email);
+                } else {
+                    console.error('Email is undefined or null');
+                }
+
+                // Store the JWT token, username and avatar in localStorage
+                localStorage.setItem('jwt', responseData.token);
+                localStorage.setItem('username', responseData.username);
+                localStorage.setItem('avatar', responseData.avatar);
+
+                // Display success message or perform further actions
+                alert(responseData.message);
+                window.location.href = "/";
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again later.');
+            }
+        }
+
+        loginForm.addEventListener('submit', handleLogin);
+    </script>
+</body>
+<footer>
+    <div class="footer-content">
+        <p>© 2024 SpaceApp@Team#1. All rights reserved.</p>
+
+    </div>
+</footer>
+</html>

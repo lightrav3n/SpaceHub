@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mars Rover Photos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&family=Strait&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./home.css">
+    <style>
+        .photo-grid {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+
+        }
+
+        .photo-grid div img {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            width: 200px;
+            height: 200px;
+        }
+
+        #fetchPhotos {
+            margin-left: 20px;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        .like-button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+
+
+        <img id="homeLogo" src="./img/spaceapp5.png" alt="Logo">
+        <div class="links">
+            <a href="/">Home</a>
+            <a href="marsPhoto.html">Mars Rover Photos</a>
+
+            <a id="signupBtn" href="signup.html">Sign Up</a>
+            <a id="loginBtn" href="login.html">Log In</a>
+            <a id="likesBtn" style="display: none;" href="likes.html">Your Likes</a>
+            <a id="logoutBtn" style="display: none;" href="#">Log Out</a>
+        </div>
+        <div class="login-info" id="loginText">
+            <!-- Will be filled by JavaScript -->
+        </div>
+        <div class="navbarImages"></div>
+
+    </nav>
+
+
+    <span class="span">
+        <h1>Mars Rover Photos</h1>
+        <span>Press Load to get pictures...</span> <br>
+
+        <button id="fetchPhotos">Load</button>
+
+    </span>
+    <div id="photos"></div>
+
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-body">
+                <form id="signupForm" style="display: none;">
+                    <input type="text" placeholder="Username" name="username">
+                    <input type="email" placeholder="Email" name="email">
+                    <input type="password" placeholder="Password" name="password">
+                    <button type="submit">Sign Up</button>
+                </form>
+                <form id="loginForm">
+                    <label for="email">Email:</label>
+                    <input type="text" placeholder="Email" name="email" id="email" required>
+                    <label for="password">Password:</label>
+                    <input type="password" placeholder="Password" name="password" id="password" required>
+                    <button type="submit">Login</button>
+                </form>
+                <button id="switchBtn">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+
+
+        // Get references to HTML elements
+        const elements = ['navbarImages', 'myModal', 'signupBtn', 'loginBtn', 'logoutBtn', 'likesBtn', 'searchButton', 'searchInput', 'searchResults', 'loginForm', 'signupForm', 'switchBtn']
+            .reduce((acc, id) => ({ ...acc, [id]: document.getElementById(id) }), {});
+        const [span] = document.getElementsByClassName("close");
+        const loginInfo = document.querySelector('.login-info');
+
+        // Function to add an event listener to an element if it exists
+        function addEventListenerToElement(element, event, handler) {
+            element?.addEventListener(event, handler);
+        }
+        // Function to get authentication info from local storage
+        function getAuthInfoFromLocalStorage() {
+            const username = localStorage.getItem('username');
+            const avatar = localStorage.getItem('avatar');
+            const isLoggedIn = Boolean(username);
+
+            return { username, avatar, isLoggedIn };
+        }
+
+        // Function to update the navbar based on the login status
+        function updateNavbar(isLoggedIn, username, avatar) {
+            if (isLoggedIn) {
+                loginInfo.innerHTML = `<img src="${avatar}" alt="User avatar"> Welcome! \n<br> Logged in as: \n<br> ${username}`;
+                loginInfo.style.display = 'flex';
+                loginInfo.style.textAlign = 'right';
+
+
+                [elements.signupBtn, elements.loginBtn].forEach(btn => {
+                    if (btn) {
+                        btn.style.display = 'none';
+                    }
+                });
+
+                [elements.logoutBtn, elements.likesBtn].forEach(btn => {
+                    if (btn) {
+                        btn.style.display = 'block';
+                    }
+                });
+            } else if (loginInfo && elements.signupBtn && elements.loginBtn) {
+                loginInfo.style.display = 'none';
+                elements.signupBtn.style.display = 'block';
+                elements.loginBtn.style.display = 'block';
+            }
+        };
+
+
+
+
+
+        async function fetchUser() {
+            // Get the JWT token from local storage
+            const token = localStorage.getItem('jwt');
+
+            // Log the token to the console
+            console.log('Token:', token);
+
+            // Make a GET request to the /fetchUser endpoint
+            const response = await fetch('/fetchUser', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            // Check if the request was successful
+            if (!response.ok) {
+                console.error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // Parse the response body as JSON
+            const user = await response.json();
+
+            // Log the user to the console
+            console.log('User:', user);
+
+            return user;
+        }
+
+
+
+        // Function to run when the page loads
+        window.onload = function () {
+            const { username, avatar, isLoggedIn } = getAuthInfoFromLocalStorage();
+
+            updateNavbar(isLoggedIn, username, avatar);
+
+            // Add event listeners to elements
+            addEventListenerToElement(elements.likeButton, 'click', function () {
+                const token = localStorage.getItem('jwt');
+                if (token) {
+                    elements.likeButton.classList.add("like-dark");
+                } else if (elements.myModal) {
+                    elements.myModal.style.display = "block";
+                }
+            });
+
+            addEventListenerToElement(span, 'click', function () {
+                if (elements.myModal) {
+                    elements.myModal.style.display = "none";
+                }
+            });
+
+            window.addEventListener('click', function (event) {
+                if (event.target == elements.myModal) {
+                    elements.myModal.style.display = "none";
+                }
+            });
+
+            addEventListenerToElement(elements.logoutBtn, 'click', function () {
+                // Clear local storage
+                localStorage.removeItem('jwt');
+                localStorage.removeItem('username');
+                localStorage.removeItem('avatar');
+
+                // Refresh the page
+                location.reload();
+            });
+
+
+
+            const fetchPhotosButton = document.getElementById('fetchPhotos');
+            addEventListenerToElement(fetchPhotosButton, 'click', fetchPhotos);
+
+            if (isLoggedIn) {
+                fetchUser(username, avatar, isLoggedIn);
+            }
+        }
+
+        function fetchPhotos() {
+            fetch('https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=DEMO_KEY')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const photosDiv = document.getElementById('photos');
+                    photosDiv.innerHTML = '';
+                    data.photos.slice(0, 15).forEach(photo => {
+                        const img = document.createElement('img');
+                        img.src = photo.img_src;
+
+                        const likeButton = document.createElement('button');
+                        likeButton.textContent = 'Like';
+                        likeButton.classList.add('like-button');
+
+                        // added this for like button functionality
+                        likeButton.addEventListener('click', function () {
+                            const token = localStorage.getItem('jwt');
+                            if (token) {
+                                likeButton.classList.add("like-dark");
+
+                                // Send a POST request to the server with the ID of the liked object
+                                fetch('/api/user/like', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Authorization': `Bearer ${token}`,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ apiObjectId: photo.id }) // Assuming the ID is stored in `id`
+                                })
+                                    .then(response => response.json())
+                                    .then(data => console.log(data))
+                                    .catch(error => console.error('Error:', error));
+                            } else if (myModal) {
+                                myModal.style.display = "block";
+                            }
+                        });
+
+                        const photoContainer = document.createElement('div');
+                        photoContainer.appendChild(img);
+                        photoContainer.appendChild(likeButton);
+
+                        photosDiv.appendChild(photoContainer);
+                    });
+                });
+        }
+        const photosDiv = document.getElementById('photos');
+        photosDiv.classList.add('photo-grid');
+
+
+
+        // login
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        loginForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const { email: { value: email }, password: { value: password } } = loginForm;
+
+            // Validate email and password
+            if (!email || !password) {
+                alert('Please enter a valid email and password.');
+                return;
+            }
+
+            try {
+                // Send a POST request to the server for user login
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify({ email, password })
+                });
+
+                switch (response.status) {
+                    case 401:
+                        alert('Incorrect email or password.');
+                        return;
+                    case 500:
+                        alert('Server error. Please try again later.');
+                        return;
+                    default:
+                        if (!response.ok) {
+                            alert('Login request failed.');
+                            return;
+                        }
+                }
+
+                const responseData = await response.json();
+
+                // Validate server response
+                if (!responseData || !responseData.token) {
+                    alert('Invalid server response.');
+                    return;
+                }
+                if (responseData.email) {
+                    localStorage.setItem('email', responseData.email);
+                } else {
+                    console.error('Email is undefined or null');
+                }
+
+                // Store the JWT token and username in localStorage
+                localStorage.setItem('jwt', responseData.token);
+                localStorage.setItem('username', responseData.username);
+                alert(responseData.message);
+                // Update the navbar to reflect the logged-in state
+                updateNavbar(true, responseData.username);
+                // Display success message or perform further actions
+
+                // Hide the modal
+                elements.myModal.style.display = "none";
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again later.');
+            }
+        });
+
+        // Signup
+        async function handleSignup(username, email, password) {
+            const response = await fetch('/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            if (response.status === 409) {
+                throw new Error('A user with this username or email already exists.');
+            }
+
+            if (!response.ok) {
+                throw new Error(`Signup request failed: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            // Return the user's token
+            return data.token;
+        }
+
+        // Modify the signupForm event listener to store the user's token in localStorage and update the navbar
+        elements.signupForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const username = elements.signupForm.username.value;
+            const email = elements.signupForm.email.value;
+            const password = elements.signupForm.password.value;
+
+            try {
+                const token = await handleSignup(username, email, password);
+
+                // Store the user's token and username in localStorage
+                localStorage.setItem('jwt', token);
+                localStorage.setItem('username', username);
+
+                // Update the navbar to reflect the logged-in state
+                updateNavbar(true, username);
+
+                alert('User created and logged in successfully.');
+
+                // Hide the modal
+                elements.myModal.style.display = "none";
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`An error occurred: ${error.message}. Please try again later.`);
+            }
+        });
+
+
+        const closeBtn = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on the button, open the modal
+        document.getElementById("signupBtn").onclick = function () {
+            myModal.style.display = "block";
+            signupForm.style.display = "none";
+            loginForm.style.display = "block";
+            switchBtn.textContent = "Sign Up";
+        }
+
+        document.getElementById("loginBtn").onclick = function () {
+            myModal.style.display = "block";
+            signupForm.style.display = "block";
+            loginForm.style.display = "none";
+            switchBtn.textContent = "Log In";
+        }
+
+        switchBtn.onclick = function () {
+            if (signupForm.style.display === "none") {
+                signupForm.style.display = "block";
+                loginForm.style.display = "none";
+                switchBtn.textContent = "Log In";
+            } else {
+                signupForm.style.display = "none";
+                loginForm.style.display = "block";
+                switchBtn.textContent = "Sign Up";
+            }
+        }
+
+        // When the user clicks on <span> (x), close the myModal
+        closeBtn.onclick = function () {
+            myModal.style.display = "none";
+        }
+
+    </script>
+    
+</body>
+<footer>
+    <div class="footer-content">
+        <p>© 2024 SpaceApp@Team#1. All rights reserved.</p>
+
+    </div>
+</footer>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&family=Strait&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./home.css">
+</head>
+<style>
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 400px;
+        font-family: "Rubik", sans-serif;
+        font-optical-sizing: auto;
+
+    }
+
+    #signupForm {
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+    }
+
+    #signupForm input {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    #signupForm button {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #1a314a;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #signupForm button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<body>
+    <nav class="navbar">
+
+
+        <img id="homeLogo" src="./img/spaceapp5.png" alt="Logo">
+        <div class="links">
+            <a href="/">Home</a>
+            <a href="marsPhoto.html">Mars Rover Photos</a>
+
+            <a id="signupBtn" href="signup.html">Sign Up</a>
+            <a id="loginBtn" href="login.html">Log In</a>
+            <a id="likesBtn" style="display: none;" href="likes.html">Your Likes</a>
+            <a id="logoutBtn" style="display: none;" href="#">Log Out</a>
+        </div>
+        <div class="login-info" id="loginText">
+            <!-- Will be filled by JavaScript -->
+        </div>
+        <div class="navbarImages"></div>
+
+    </nav>
+    <div class="content">
+        <h1>Sign Up</h1>
+        <!-- <span>Please signup to like photos</span> -->
+        <form id="signupForm">
+
+            <input type="text" placeholder="Username" name="username">
+            <input type="email" placeholder="Email" name="email">
+            <input type="password" placeholder="Password" name="password">
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+
+    <script type="module">
+        import { avatars } from './avatars.js';
+
+
+
+
+
+        async function handleSignup(username, email, password) {
+            const avatar = avatars[Math.floor(Math.random() * avatars.length)];
+
+            // Check if avatar is defined and not null
+            if (!avatar) {
+                throw new Error('Failed to select an avatar.');
+            }
+
+            const response = await fetch('/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password, avatar })
+            });
+
+            if (response.status === 409) {
+                throw new Error('A user with this username or email already exists.');
+            }
+
+            if (!response.ok) {
+                throw new Error(`Signup request failed: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            // Return the user's token, username and avatar
+            return { token: data.token, username, avatar };
+        }
+        signupForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const username = signupForm.username.value;
+            const email = signupForm.email.value;
+            const password = signupForm.password.value;
+
+            try {
+                const { token, username: returnedUsername, avatar } = await handleSignup(username, email, password);
+
+                // Store the user's token, username and avatar in localStorage
+                localStorage.setItem('jwt', token);
+                localStorage.setItem('username', returnedUsername);
+                localStorage.setItem('avatar', avatar);
+
+                alert('User created and logged in successfully.');
+                window.location.href = "/";
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`An error occurred: ${error.message}. Please try again later.`);
+            }
+        });
+    </script>
+</body>
+<footer>
+    <div class="footer-content">
+        <p>© 2024 SpaceApp@Team#1. All rights reserved.</p>
+
+    </div>
+</footer>
+</html>

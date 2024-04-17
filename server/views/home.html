@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SpaceApp Hub</title>
+    <link rel="stylesheet" href="./home.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&family=Strait&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+
+
+        <img id="homeLogo" src="./img/spaceapp5.png" alt="Logo">
+        <div class="links">
+            <a href="/">Home</a>
+            <a href="marsPhoto.html">Mars Rover Photos</a>
+
+            <a id="signupBtn" href="signup.html">Sign Up</a>
+            <a id="loginBtn" href="login.html">Log In</a>
+            <a id="likesBtn" style="display: none;" href="likes.html">Your Likes</a>
+            <a id="logoutBtn" style="display: none;" href="#">Log Out</a>
+        </div>
+        <div class="login-info" id="loginText">
+            <!-- Will be filled by JavaScript -->
+        </div>
+        <div class="navbarImages"></div>
+
+    </nav>
+    
+        
+        
+
+        
+    <div id="heroSection">
+        <!-- The fetched data will be inserted here -->
+    </div>
+
+
+<span class="span">
+    <h1>Welcome</h1>
+        <p>Welcome to SpaceApp Hub! Here, you can enjoy the Picture of the Day or search for your own NASA images and videos. Start exploring the wonders of space now!</p>
+    </span>
+    <span class="searchSpan">
+        <input type="text" id="searchInput" placeholder="Search NASA Images and Videos">
+        <button id="searchButton">Search</button>
+        <div id="searchResults"></div>
+    </span>
+    <span class="span">
+    <h1>About Us</h1>
+    <p>SpaceApp Hub is a platform dedicated to bringing you the latest news, images, and videos from the world of space exploration. Our team of experts is passionate about sharing the wonders of the universe with you. Join us on this exciting journey as we explore the cosmos together.</p>
+    </span>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-body">
+                <form id="signupForm" style="display: none;">
+                    <h2>Sign Up</h2>
+                    <input type="text" placeholder="Username" name="username">
+                    <input type="email" placeholder="Email" name="email">
+                    <input type="password" placeholder="Password" name="password">
+                    <button type="submit">Sign Up</button>
+                </form>
+                <form id="loginForm">
+                    <h2>Log In</h2>
+                    <label for="email"></label>
+                    <input type="text" placeholder="Email" name="email" id="email" required>
+                    <label for="password"></label>
+                    <input type="password" placeholder="Password" name="password" id="password" required>
+                    <br>
+                    <button type="submit">Login</button>
+                </form>
+                <button id="switchBtn">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script type="module" src="./home.js"></script>
+
+
+</body>
+<footer>
+    <div class="footer-content">
+        <p>© 2024 SpaceApp@Team#1.   All rights reserved.</p>
+        
+    </div>
+</footer>
+</html>

@@ -1,0 +1,386 @@
+* {
+    font-family: "Rubik", sans-serif;
+    font-optical-sizing: auto;
+
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    padding-bottom: 70px;
+    /* margin-bottom: 100px; */
+}
+
+.span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* height: 400px; */
+    /* width: 800px; */
+}
+
+.span h1,
+.span h2,
+.span p {
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#heroSection {
+    position: relative;
+    /* Other styles... */
+}
+
+/* Style for the login modal */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    /* Could be more or less, depending on screen size */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    font-family: Arial, sans-serif;
+}
+
+#signupForm,
+#loginForm {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+#signupForm input,
+#loginForm input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#signupForm button,
+#loginForm button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #1a314a;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#signupForm button:hover,
+#loginForm button:hover {
+    background-color: #0056b3;
+}
+
+#myModal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: fit-content;
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Dark like button */
+.like-dark {
+    background-color: #333;
+    color: #fff;
+}
+
+#switchBtn {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: #346294;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#switchBtn:hover {
+    background-color: #0056b3;
+}
+
+/* Styling for navbar */
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #1a314a;
+}
+
+.links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: #f2f2f2;
+    text-decoration: none;
+    font-size: 20px;
+    padding: 20px;
+
+}
+
+.links a {
+
+    color: #f2f2f2;
+    text-decoration: none;
+    font-size: 20px;
+    padding: 5px;
+    margin-left: 20px;
+}
+
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.navbar a.homeLogo {
+    order: -1;
+}
+
+.navbar .login-info {
+
+    align-items: center;
+    justify-items: center;
+    margin: 1em;
+    color: white;
+}
+
+#loginText {
+    order: 1;
+    /* display: flex;
+    align-items: center;
+    justify-items: center; */
+    margin: 1em;
+    font-size: 15px;
+    color: white;
+}
+
+
+#homeLogo {
+    order: -4;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+    margin: 10px;
+
+}
+
+.navbar img {
+    order: 2;
+    border: 1px solid white;
+    background-color: white;
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
+    margin: 10px;
+}
+
+#searchInput {
+
+    width: 50%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+.searchSpan {
+    margin-left: 20px;
+    padding-left: 20px;
+}
+
+#searchButton {
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+.article {
+    margin: 20px;
+}
+
+#searchResults {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.article {
+    display: flex;
+    flex-wrap: wrap;
+    /* flex-direction: column; */
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 300px;
+}
+
+.article img {
+    width: 100%;
+    height: auto;
+}
+
+.article h2 {
+    font-size: 20px;
+    margin: 10px 0;
+}
+
+.article p {
+    font-size: 16px;
+    color: #333;
+}
+
+.article .like-button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #1a314a;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.article .like-button.like-dark {
+    background-color: #0056b3;
+}
+
+.article .like-button:hover {
+    background-color: #0056b3;
+}
+
+/* footer styles */
+
+footer {
+    background-color: #1a314a;
+    color: white;
+    padding: 5px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+    
+}
+
+.footer-content {
+    max-width: 960px;
+
+}
+
+.footer-content p {
+    margin-left: 20px;
+}
+
+/* hero section styles */
+.hidden {
+    display: none;
+}
+
+.hero-image {
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
+    margin-top: 0;
+}
+
+.hero-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black */
+    padding: 20px;
+}
