@@ -2,7 +2,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { userSignup, userLogin, updateUserApiObjectId, fetchUser,removeUserApiObjectId } from '../controllers/userController.js';
+import { userSignup, userLogin, updateUserApiObjectId, fetchUser,removeUserApiObjectId, getLikedItems } from '../controllers/userController.js';
 
 import authMiddleware from '../middleware/auth.js';
 
@@ -33,6 +33,7 @@ router.post('/signup', userSignup);
 router.post('/login', userLogin);
 
 // Defines routes for user like and dislike
+router.get('/api/user/like', authMiddleware, getLikedItems)
 router.post('/api/user/like', authMiddleware, updateUserApiObjectId);
 router.delete('/api/user/dislike', authMiddleware, removeUserApiObjectId);
 

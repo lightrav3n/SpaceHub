@@ -224,3 +224,25 @@ export const fetchUser = async (req, res, next) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+export const getLikedItems = async (req, res) => {
+  try {
+    // Get the user ID from the decoded JWT
+    const userId = req.user.id;
+
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // Send the user's liked items in the response
+    res.status(200).json(user.apiObjectId);
+  } catch (error) {
+    // Log any errors that occurred
+    console.error("Error in getLikedItems:", error);
+
+    // Send a 500 error response
+    res.status(500).json({ msg: `Server error: ${error.message}` });
+  }
+};
